@@ -1,26 +1,16 @@
-import babelParser from '@babel/eslint-parser';
+import tseslint from 'typescript-eslint';
 
-export default [
+export default tseslint.config(
   {
     ignores: ['dist/**', 'node_modules/**', 'server.js', 'coverage/**'],
   },
+  ...tseslint.configs.recommended,
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
-    languageOptions: {
-      parser: babelParser,
-      parserOptions: {
-        requireConfigFile: false,
-        babelOptions: {
-          presets: [
-            '@babel/preset-typescript',
-            ['@babel/preset-react', { runtime: 'automatic' }],
-          ],
-        },
-      },
-    },
+    files: ['**/*.{ts,tsx}'],
     rules: {
-      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
       'no-console': 'off',
     },
-  },
-];
+  }
+);

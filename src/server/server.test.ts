@@ -104,8 +104,7 @@ describe('Server & API Integration Suite (with Mocked Gemini)', () => {
 
     it('returns null on empty or non-string input', () => {
       expect(cleanAndParseJson('')).toBeNull();
-      // @ts-expect-error test invalid input
-      expect(cleanAndParseJson(null)).toBeNull();
+      expect(cleanAndParseJson(null as unknown as string)).toBeNull();
     });
   });
 

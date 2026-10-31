@@ -92,24 +92,30 @@ The application supports three core event types:
 
 ---
 
-## 🧪 Unit Testing
+## 🧪 Testing & Quality Assurance
 
-The test suite runs 28 unit tests using the Node.js native test runner (`node:test` + `node:assert/strict`) via `tsx`:
+The test suite runs 47 tests across unit, integration, and component tests using Vitest and React Testing Library:
 
-- **Budget Calculations**: Category allocations, actual vs. estimate delta, remaining budget, over-budget detection.
+- **Budget Calculations & Normalization**: Category allocations, actual vs. estimate delta, remaining budget, over-budget detection, proportional scaling with zero rounding drift.
 - **Milestone & Timeline Engine**: Task progress, high-priority pending counters, date proximity phase filtering.
-- **Budget Normalization**: Proportional scaling ensuring `sum(items) === totalBudget` with zero rounding drift.
-- **Guest Management**: RSVP status, plus-one aggregations, and dietary requirements tracking.
-- **Validation & Boundary Tests**: Event types, strict YYYY-MM-DD date regex, guest limits (1-10,000), budget bounds ($1-$1B), string length caps.
-- **Security & Sanitization**: Prompt injection isolation delimiter testing, chat message length bounds, history truncation.
-- **Vendor Math & Run of Show**: Discount calculations and chronological sequencing.
+- **Guest Management & Accessibility**: RSVP status labels (non-color-only), plus-one aggregations, dietary requirements.
+- **API Endpoint Integration**: Supertest integration tests for `/api/generate-plan`, `/api/vendor-negotiate`, in-memory TTL caching, rate limiting (429), and fallback execution.
+- **Validation & Boundary Tests**: Strict YYYY-MM-DD date regex, guest limits (1-10,000), budget bounds ($1-$1B), string length caps.
+- **Security & Sanitization**: Prompt injection isolation delimiter testing, chat message length bounds.
 
-### Run Tests:
+### Run All Tests:
 ```bash
 npm test
 ```
 
-### Type Check:
+### Type Check (TypeScript):
+```bash
+npx tsc --noEmit
+# or
+npm run typecheck
+```
+
+### Linting:
 ```bash
 npm run lint
 ```

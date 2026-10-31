@@ -154,7 +154,10 @@ export async function generateEventPlanWithAI(
     vibe: validated.vibe || data.vibe,
     colorPalette:
       validated.colorPalette && validated.colorPalette.length > 0
-        ? validated.colorPalette
+        ? validated.colorPalette.map((c) => ({
+            name: c.name || 'Accent',
+            hex: c.hex || '#8FBC8F',
+          }))
         : [
             { name: 'Rose Gold', hex: '#B76E79' },
             { name: 'Champagne', hex: '#F7E7CE' },
@@ -187,26 +190,52 @@ export async function generateEventPlanWithAI(
           ? v.checklist
           : ['Review contract terms', 'Confirm date availability', 'Check insurance'],
     })),
-    ideas: validated.ideas || {
-      themeName: `${data.vibe} Gathering`,
-      themeDescription: `A tailored ${data.type} experience crafted around ${data.vibe}.`,
-      colorPalette: [
-        { name: 'Rose Gold', hex: '#B76E79' },
-        { name: 'Champagne', hex: '#F7E7CE' },
-      ],
-      uniqueActivities: [
-        { title: 'Interactive Guest Memory Station', description: 'Guests share photos and handwritten notes.' },
-        { title: 'Signature Toast & Spotlight Moment', description: 'Curated speeches with personal tribute montage.' },
-      ],
-      signatureFoodAndDrink: [
-        { name: 'Celebration Spritz', type: 'drink', description: 'Crisp sparkling blend with fresh citrus & herbs.' },
-      ],
-      decorVibes: [
-        { title: 'Ambient Uplighting', tips: 'Warm tone LEDs to accentuate architectural venue lines.' },
-      ],
-      musicAndVibeTips: ['Build tempo from ambient acoustic to high-energy dance.'],
-      favorsAndGifts: ['Custom keepsake gift with personalized monogram.'],
-    },
+    ideas: validated.ideas
+      ? {
+          themeName: validated.ideas.themeName || `${data.vibe} Gathering`,
+          themeDescription:
+            validated.ideas.themeDescription ||
+            `A tailored ${data.type} experience crafted around ${data.vibe}.`,
+          colorPalette: (validated.ideas.colorPalette || []).map((c) => ({
+            name: c.name || 'Accent',
+            hex: c.hex || '#8FBC8F',
+          })),
+          uniqueActivities: (validated.ideas.uniqueActivities || []).map((a) => ({
+            title: a.title || 'Activity',
+            description: a.description || 'Special moment',
+          })),
+          signatureFoodAndDrink: (validated.ideas.signatureFoodAndDrink || []).map((s) => ({
+            name: s.name || 'Specialty Item',
+            type: s.type || 'drink',
+            description: s.description || 'Signature menu choice',
+          })),
+          decorVibes: (validated.ideas.decorVibes || []).map((d) => ({
+            title: d.title || 'Decor',
+            tips: d.tips || 'Visual touch',
+          })),
+          musicAndVibeTips: validated.ideas.musicAndVibeTips || [],
+          favorsAndGifts: validated.ideas.favorsAndGifts || [],
+        }
+      : {
+          themeName: `${data.vibe} Gathering`,
+          themeDescription: `A tailored ${data.type} experience crafted around ${data.vibe}.`,
+          colorPalette: [
+            { name: 'Rose Gold', hex: '#B76E79' },
+            { name: 'Champagne', hex: '#F7E7CE' },
+          ],
+          uniqueActivities: [
+            { title: 'Interactive Guest Memory Station', description: 'Guests share photos and handwritten notes.' },
+            { title: 'Signature Toast & Spotlight Moment', description: 'Curated speeches with personal tribute montage.' },
+          ],
+          signatureFoodAndDrink: [
+            { name: 'Celebration Spritz', type: 'drink', description: 'Crisp sparkling blend with fresh citrus & herbs.' },
+          ],
+          decorVibes: [
+            { title: 'Ambient Uplighting', tips: 'Warm tone LEDs to accentuate architectural venue lines.' },
+          ],
+          musicAndVibeTips: ['Build tempo from ambient acoustic to high-energy dance.'],
+          favorsAndGifts: ['Custom keepsake gift with personalized monogram.'],
+        },
     guests: [
       { id: 'g1', name: 'Primary Host & Partner', group: 'VIP', rsvpStatus: 'attending', plusOne: true, table: 'Table 1' },
       { id: 'g2', name: 'Close Family Lead', group: 'Family', rsvpStatus: 'attending', plusOne: true, table: 'Table 1' },
