@@ -27,33 +27,37 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
   const [newPriority, setNewPriority] = useState<TimelineTask['priority']>('medium');
   const [newNotes, setNewNotes] = useState('');
 
-  const progress = calculateProgress(plan.timeline);
+  const progress = React.useMemo(() => calculateProgress(plan.timeline), [plan.timeline]);
 
-  const phaseOptions: { id: TimelinePhase | 'all'; label: string; count: number }[] = [
-    { id: 'all', label: 'All Tasks', count: plan.timeline.length },
-    { id: '12-6_months', label: '12-6 Months', count: plan.timeline.filter((t) => t.phase === '12-6_months').length },
-    { id: '6-3_months', label: '6-3 Months', count: plan.timeline.filter((t) => t.phase === '6-3_months').length },
-    { id: '3-1_months', label: '3-1 Months', count: plan.timeline.filter((t) => t.phase === '3-1_months').length },
-    { id: 'final_weeks', label: 'Final Weeks', count: plan.timeline.filter((t) => t.phase === 'final_weeks').length },
-    { id: 'day_of', label: '⏰ Day-Of Schedule', count: plan.timeline.filter((t) => t.phase === 'day_of').length },
-  ];
+  const phaseOptions: { id: TimelinePhase | 'all'; label: string; count: number }[] = React.useMemo(
+    () => [
+      { id: 'all', label: 'All Tasks', count: plan.timeline.length },
+      { id: '12-6_months', label: '12-6 Months', count: plan.timeline.filter((t) => t.phase === '12-6_months').length },
+      { id: '6-3_months', label: '6-3 Months', count: plan.timeline.filter((t) => t.phase === '6-3_months').length },
+      { id: '3-1_months', label: '3-1 Months', count: plan.timeline.filter((t) => t.phase === '3-1_months').length },
+      { id: 'final_weeks', label: 'Final Weeks', count: plan.timeline.filter((t) => t.phase === 'final_weeks').length },
+      { id: 'day_of', label: '⏰ Day-Of Schedule', count: plan.timeline.filter((t) => t.phase === 'day_of').length },
+    ],
+    [plan.timeline]
+  );
 
-  let filtered = plan.timeline;
-  if (activePhase !== 'all') {
-    filtered = filtered.filter((t) => t.phase === activePhase);
-  }
-  if (onlyIncomplete) {
-    filtered = filtered.filter((t) => !t.completed);
-  }
-
-  // Sort day_of tasks chronologically if possible
-  if (activePhase === 'day_of') {
-    filtered = [...filtered].sort((a, b) => {
-      const timeA = a.dayOfTime || '';
-      const timeB = b.dayOfTime || '';
-      return timeA.localeCompare(timeB);
-    });
-  }
+  const filtered = React.useMemo(() => {
+    let result = plan.timeline;
+    if (activePhase !== 'all') {
+      result = result.filter((t) => t.phase === activePhase);
+    }
+    if (onlyIncomplete) {
+      result = result.filter((t) => !t.completed);
+    }
+    if (activePhase === 'day_of') {
+      result = [...result].sort((a, b) => {
+        const timeA = a.dayOfTime || '';
+        const timeB = b.dayOfTime || '';
+        return timeA.localeCompare(timeB);
+      });
+    }
+    return result;
+  }, [plan.timeline, activePhase, onlyIncomplete]);
 
   const handleToggleTask = (id: string) => {
     const updated = plan.timeline.map((task) =>

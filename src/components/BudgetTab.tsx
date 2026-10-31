@@ -25,7 +25,10 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
   const [newItemEstimated, setNewItemEstimated] = useState(500);
   const [newItemNotes, setNewItemNotes] = useState('');
 
-  const summary = calculateBudgetSummary(plan.budgetItems, plan.totalBudget);
+  const summary = React.useMemo(
+    () => calculateBudgetSummary(plan.budgetItems, plan.totalBudget),
+    [plan.budgetItems, plan.totalBudget]
+  );
 
   const categories: BudgetItem['category'][] = [
     'Venue',
@@ -39,9 +42,11 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
     'Emergency Buffer',
   ];
 
-  const filteredItems = selectedCategory === 'All'
-    ? plan.budgetItems
-    : plan.budgetItems.filter((item) => item.category === selectedCategory);
+  const filteredItems = React.useMemo(() => {
+    return selectedCategory === 'All'
+      ? plan.budgetItems
+      : plan.budgetItems.filter((item) => item.category === selectedCategory);
+  }, [plan.budgetItems, selectedCategory]);
 
   const handleTogglePaid = (id: string) => {
     const updated = plan.budgetItems.map((item) =>
@@ -192,19 +197,23 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
             </div>
           </div>
 
-          <div className={`p-4 rounded-xl border ${
-            summary.isOverBudget
-              ? 'bg-rose-500/10 border-rose-500/30 text-rose-300'
-              : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-          }`}>
+          <div
+            data-testid="budget-status-card"
+            className={`p-4 rounded-xl border ${
+              summary.isOverBudget
+                ? 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+                : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+            }`}
+          >
             <div className="text-xs font-medium">
               {summary.isOverBudget ? 'Budget Overrun' : 'Remaining Cushion'}
             </div>
             <div className="text-2xl font-bold mt-1">
               {formatCurrency(Math.abs(summary.remainingBudget), plan.currency)}
             </div>
-            <div className="text-[11px] mt-1">
-              {summary.isOverBudget ? '⚠️ Exceeds ceiling limit' : '✓ Available to spend'}
+            <div className="text-[11px] mt-1 font-medium flex items-center gap-1" data-testid="budget-status-label">
+              <span>{summary.isOverBudget ? 'Status: Over-Allocated' : 'Status: Within Budget'}</span>
+              <span>{summary.isOverBudget ? '(Exceeds ceiling limit)' : '(Available to spend)'}</span>
             </div>
           </div>
         </div>

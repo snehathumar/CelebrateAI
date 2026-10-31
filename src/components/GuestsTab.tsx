@@ -21,15 +21,18 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
   const [newDietary, setNewDietary] = useState('');
   const [newTable, setNewTable] = useState('Table 1');
 
-  const stats = calculateGuestStats(plan.guests);
+  const stats = React.useMemo(() => calculateGuestStats(plan.guests), [plan.guests]);
 
-  const filteredGuests = plan.guests.filter((g) => {
-    const matchesSearch = g.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (g.table && g.table.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (g.dietary && g.dietary.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesStatus = filterStatus === 'all' || g.rsvpStatus === filterStatus;
-    return matchesSearch && matchesStatus;
-  });
+  const filteredGuests = React.useMemo(() => {
+    return plan.guests.filter((g) => {
+      const matchesSearch =
+        g.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (g.table && g.table.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (g.dietary && g.dietary.toLowerCase().includes(searchTerm.toLowerCase()));
+      const matchesStatus = filterStatus === 'all' || g.rsvpStatus === filterStatus;
+      return matchesSearch && matchesStatus;
+    });
+  }, [plan.guests, searchTerm, filterStatus]);
 
   const handleUpdateRsvp = (id: string, rsvpStatus: GuestItem['rsvpStatus']) => {
     const updated = plan.guests.map((g) => (g.id === id ? { ...g, rsvpStatus } : g));
@@ -219,12 +222,14 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
                   <div className="flex items-center justify-between sm:justify-end gap-3">
                     <select
                       value={guest.rsvpStatus}
+                      data-testid={`guest-rsvp-select-${guest.id}`}
+                      aria-label={`RSVP Status for ${guest.name}`}
                       onChange={(e) => handleUpdateRsvp(guest.id, e.target.value as GuestItem['rsvpStatus'])}
-                      className={`text-xs font-semibold rounded-lg px-2.5 py-1 border focus:outline-none ${statusBadges}`}
+                      className={`text-xs font-semibold rounded-lg px-2.5 py-1 border focus:outline-none cursor-pointer ${statusBadges}`}
                     >
-                      <option value="attending">✓ Attending</option>
-                      <option value="pending">? Pending</option>
-                      <option value="declined">✗ Declined</option>
+                      <option value="attending">Status: Confirmed Attending</option>
+                      <option value="pending">Status: Awaiting / Pending</option>
+                      <option value="declined">Status: Declined</option>
                     </select>
 
                     <button

@@ -42,9 +42,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
     { id: 'paid', label: '💳 Paid in Full' },
   ];
 
-  const filteredVendors = selectedStatus === 'all'
-    ? plan.vendors
-    : plan.vendors.filter((v) => v.status === selectedStatus);
+  const filteredVendors = React.useMemo(() => {
+    return selectedStatus === 'all'
+      ? plan.vendors
+      : plan.vendors.filter((v) => v.status === selectedStatus);
+  }, [plan.vendors, selectedStatus]);
 
   const handleUpdateStatus = (id: string, status: VendorStatus) => {
     const updated = plan.vendors.map((v) => (v.id === id ? { ...v, status } : v));
