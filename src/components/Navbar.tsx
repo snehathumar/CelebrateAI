@@ -38,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   GenAI Planner
                 </span>
               </div>
-              <p className="text-xs text-slate-400 hidden sm:block">Weddings • Birthdays • Community Galas</p>
+              <p className="text-xs text-slate-300 hidden sm:block">Weddings • Birthdays • Community Galas</p>
             </div>
           </div>
 
@@ -46,7 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Presets dropdown / chips */}
             <div className="hidden lg:flex items-center bg-slate-800/80 p-1 rounded-lg border border-slate-700 text-xs">
-              <span className="text-slate-400 px-2 font-medium">Presets:</span>
+              <span className="text-slate-300 px-2 font-medium">Presets:</span>
               <button
                 onClick={() => onSelectSample('wedding')}
                 className={`px-2.5 py-1 rounded-md transition-all ${

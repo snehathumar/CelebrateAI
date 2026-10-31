@@ -99,7 +99,7 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
               <Calendar className="h-5 w-5 text-rose-400" />
               Master Countdown & Day-Of Run of Show
             </h2>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-300 mt-1">
               Phased milestone checklist leading up to the celebration, plus hour-by-hour day-of coordination.
             </p>
           </div>
@@ -142,7 +142,7 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
 
           {/* Toggle incomplete */}
           <div className="ml-auto flex items-center gap-2 pt-2 sm:pt-0">
-            <label className="flex items-center gap-1.5 text-xs text-slate-400 cursor-pointer select-none">
+            <label className="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={onlyIncomplete}
@@ -158,7 +158,7 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
       {/* Task List Section */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl divide-y divide-slate-800">
         {filtered.length === 0 ? (
-          <div className="p-10 text-center text-slate-400 text-sm">
+          <div className="p-10 text-center text-slate-300 text-sm">
             No tasks found in this phase. Click "Add Milestone" to schedule one!
           </div>
         ) : (
@@ -188,7 +188,7 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
                   <div className="flex flex-wrap items-center gap-2">
                     <span
                       className={`text-sm font-semibold ${
-                        task.completed ? 'line-through text-slate-400' : 'text-white'
+                        task.completed ? 'line-through text-slate-300' : 'text-white'
                       }`}
                     >
                       {task.title}
@@ -214,7 +214,7 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
                           ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
                           : task.priority === 'medium'
                           ? 'bg-amber-500/10 text-amber-300 border border-amber-500/20'
-                          : 'bg-slate-800 text-slate-400'
+                          : 'bg-slate-800 text-slate-300'
                       }`}
                     >
                       {task.priority}
@@ -222,20 +222,20 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
                   </div>
 
                   {task.notes && (
-                    <p className="text-xs text-slate-400 mt-1 max-w-2xl">{task.notes}</p>
+                    <p className="text-xs text-slate-300 mt-1 max-w-2xl">{task.notes}</p>
                   )}
 
                   {/* Assignee & Date info */}
-                  <div className="flex flex-wrap items-center gap-3 mt-1.5 text-xs text-slate-400">
+                  <div className="flex flex-wrap items-center gap-3 mt-1.5 text-xs text-slate-300">
                     {task.assignee && (
                       <span className="flex items-center gap-1 text-slate-300">
-                        <User className="h-3 w-3 text-slate-400" />
+                        <User className="h-3 w-3 text-slate-300" />
                         {task.assignee}
                       </span>
                     )}
                     {task.targetDate && task.phase !== 'day_of' && (
                       <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3 text-slate-400" />
+                        <Calendar className="h-3 w-3 text-slate-300" />
                         Target: {task.targetDate}
                       </span>
                     )}
@@ -344,7 +344,7 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
                   </label>
                   <select
                     value={newPriority}
-                    onChange={(e) => setNewPriority(e.target.value as any)}
+                    onChange={(e) => setNewPriority(e.target.value as TimelineTask['priority'])}
                     className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-rose-500"
                   >
                     <option value="high">High (Critical)</option>
@@ -371,7 +371,7 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-3.5 py-1.5 text-xs text-slate-400 hover:text-white"
+                  className="px-3.5 py-1.5 text-xs text-slate-300 hover:text-white"
                 >
                   Cancel
                 </button>

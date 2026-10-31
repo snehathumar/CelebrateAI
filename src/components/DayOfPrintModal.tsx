@@ -42,7 +42,7 @@ export const DayOfPrintModal: React.FC<DayOfPrintModalProps> = ({
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-white"
+              className="p-1.5 text-slate-300 hover:text-white"
               aria-label="Close print preview"
             >
               <X className="h-5 w-5" />
@@ -60,7 +60,7 @@ export const DayOfPrintModal: React.FC<DayOfPrintModalProps> = ({
             <h1 className="text-xl font-extrabold text-white print:text-black mt-1">
               {plan.title}
             </h1>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-slate-400 print:text-gray-700 mt-2 text-xs">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-slate-300 print:text-gray-700 mt-2 text-xs">
               <span className="flex items-center gap-1 font-medium">
                 <Calendar className="h-3.5 w-3.5" /> Date: {plan.date}
               </span>
@@ -78,7 +78,7 @@ export const DayOfPrintModal: React.FC<DayOfPrintModalProps> = ({
             </h2>
 
             {dayOfTasks.length === 0 ? (
-              <p className="text-slate-400 print:text-gray-600 italic">
+              <p className="text-slate-300 print:text-gray-600 italic">
                 No tasks set for Day-Of phase. Add items under Timeline with phase "Day-Of Schedule".
               </p>
             ) : (
@@ -97,7 +97,7 @@ export const DayOfPrintModal: React.FC<DayOfPrintModalProps> = ({
                           {task.title}
                         </div>
                         {task.notes && (
-                          <div className="text-[11px] text-slate-400 print:text-gray-600 mt-0.5">
+                          <div className="text-[11px] text-slate-300 print:text-gray-600 mt-0.5">
                             {task.notes}
                           </div>
                         )}
@@ -128,7 +128,7 @@ export const DayOfPrintModal: React.FC<DayOfPrintModalProps> = ({
                   <div className="font-bold text-white print:text-black">
                     {v.category}: {v.name}
                   </div>
-                  <div className="text-slate-400 print:text-gray-600 text-[11px] mt-0.5">
+                  <div className="text-slate-300 print:text-gray-600 text-[11px] mt-0.5">
                     {v.contactPerson && <span>Contact: {v.contactPerson} • </span>}
                     {v.phone && <span>Tel: {v.phone}</span>}
                   </div>

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { X, Sparkles, Send, Loader2, Bot, User, Copy, Check, MessageSquare } from 'lucide-react';
 import { AIChatMessage, EventPlan } from '../types/event';
 
@@ -59,7 +60,7 @@ export const AIChatConcierge: React.FC<AIChatConciergeProps> = ({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [...messages, userMsg],
+          messages: [...messages.slice(-19), userMsg],
           currentPlan,
         }),
       });
@@ -72,6 +73,7 @@ export const AIChatConcierge: React.FC<AIChatConciergeProps> = ({
           text: data.reply,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           suggestions: data.suggestions,
+          source: data.source || 'gemini',
         };
         setMessages((prev) => [...prev, assistantMsg]);
       }
@@ -82,6 +84,7 @@ export const AIChatConcierge: React.FC<AIChatConciergeProps> = ({
         sender: 'assistant',
         text: 'I had a momentary connection hiccup, but here is a quick tip: prioritize high-impact experiential items like great food, great lighting, and great music!',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        source: 'template',
       };
       setMessages((prev) => [...prev, fallbackMsg]);
     } finally {
@@ -109,12 +112,12 @@ export const AIChatConcierge: React.FC<AIChatConciergeProps> = ({
                 GenAI Event Concierge
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
               </h2>
-              <p className="text-[11px] text-slate-400">Context: {currentPlan.title}</p>
+              <p className="text-[11px] text-slate-300">Context: {currentPlan.title}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
             aria-label="Close concierge"
           >
             <X className="h-5 w-5" />
@@ -147,7 +150,7 @@ export const AIChatConcierge: React.FC<AIChatConciergeProps> = ({
                       </>
                     )}
                   </span>
-                  <div className="flex items-center gap-1.5 opacity-80">
+                  <div className="flex items-center gap-1.5 opacity-90">
                     <span>{msg.timestamp}</span>
                     {msg.sender === 'assistant' && (
                       <button
@@ -165,8 +168,38 @@ export const AIChatConcierge: React.FC<AIChatConciergeProps> = ({
                   </div>
                 </div>
 
-                <div className="whitespace-pre-wrap font-sans text-xs space-y-1.5">
-                  {msg.text}
+                {msg.source === 'template' && (
+                  <div className="mb-2">
+                    <span className="text-[10px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                      Template result (AI unavailable)
+                    </span>
+                  </div>
+                )}
+
+                <div className="font-sans text-xs space-y-1.5 leading-relaxed break-words">
+                  <ReactMarkdown
+                    components={{
+                      p: ({ children }) => <p className="mb-1.5 last:mb-0 leading-relaxed">{children}</p>,
+                      ul: ({ children }) => <ul className="list-disc pl-4 space-y-1 my-1.5">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal pl-4 space-y-1 my-1.5">{children}</ol>,
+                      li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                      strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                      h3: ({ children }) => <h3 className="font-bold text-white text-xs mt-2 mb-1">{children}</h3>,
+                      h4: ({ children }) => <h4 className="font-semibold text-slate-100 text-xs mt-1.5 mb-0.5">{children}</h4>,
+                      a: ({ href, children }) => (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-rose-400 underline hover:text-rose-300"
+                        >
+                          {children}
+                        </a>
+                      ),
+                    }}
+                  >
+                    {msg.text}
+                  </ReactMarkdown>
                 </div>
               </div>
 
@@ -207,6 +240,7 @@ export const AIChatConcierge: React.FC<AIChatConciergeProps> = ({
           >
             <input
               type="text"
+              maxLength={1000}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask for budget cuts, toast speeches, playlists, checklists..."

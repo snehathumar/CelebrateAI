@@ -8,6 +8,8 @@ import {
   getSampleWeddingPlan,
   getSampleBirthdayPlan,
   getSampleCommunityPlan,
+  normalizeBudgetItems,
+  getValidPhases,
 } from './eventCalculations';
 import { BudgetItem, TimelineTask, GuestItem } from '../types/event';
 
@@ -96,4 +98,34 @@ test('Sample event generators return valid complete structures', () => {
   const community = getSampleCommunityPlan();
   assert.equal(community.type, 'community');
   assert.ok(community.guestCount > 500);
+});
+
+test('normalizeBudgetItems scales budget items to equal total budget exactly', () => {
+  const items: BudgetItem[] = [
+    { id: '1', category: 'Venue', name: 'Venue', estimatedCost: 3000, actualCost: 0, paid: false },
+    { id: '2', category: 'Catering & Bar', name: 'Catering', estimatedCost: 3500, actualCost: 0, paid: false },
+    { id: '3', category: 'Photo & Video', name: 'Photo', estimatedCost: 1500, actualCost: 0, paid: false },
+  ];
+  // original sum is 8000, target is 10000
+  const normalized = normalizeBudgetItems(items, 10000);
+  const sum = normalized.reduce((acc, it) => acc + it.estimatedCost, 0);
+  assert.equal(sum, 10000);
+  assert.equal(normalized.length, 3);
+});
+
+test('getValidPhases excludes phases that have already elapsed', () => {
+  const baseDate = new Date('2026-10-30T00:00:00');
+  
+  // Event in 20 days: should not have 12-6_months or 6-3_months or 3-1_months
+  const shortPhases = getValidPhases('2026-11-19', baseDate);
+  assert.deepEqual(shortPhases, ['final_weeks', 'day_of']);
+
+  // Event in 100 days: should have 6-3_months, 3-1_months, final_weeks, day_of
+  const mediumPhases = getValidPhases('2027-02-07', baseDate);
+  assert.ok(mediumPhases.includes('6-3_months'));
+  assert.ok(!mediumPhases.includes('12-6_months'));
+
+  // Event in 300 days: should have 12-6_months
+  const longPhases = getValidPhases('2027-08-26', baseDate);
+  assert.ok(longPhases.includes('12-6_months'));
 });

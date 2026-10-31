@@ -6,7 +6,7 @@ import { CURRENCY_SYMBOLS } from '../utils/eventCalculations';
 interface AIPlannerModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onPlanGenerated: (plan: EventPlan) => void;
+  onPlanGenerated: (plan: EventPlan, source?: 'gemini' | 'template') => void;
 }
 
 const VIBE_SUGGESTIONS: Record<EventType, string[]> = {
@@ -117,7 +117,7 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
       const data = await response.json();
       clearInterval(interval);
       if (data.success && data.plan) {
-        onPlanGenerated(data.plan);
+        onPlanGenerated(data.plan, data.source || 'gemini');
         onClose();
       } else {
         alert('Could not generate plan. Please try again.');
@@ -151,7 +151,7 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
                 GenAI Event Planner Wizard
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-300">
                 Generate an end-to-end celebration plan with budgets, schedules, vendors & ideas
               </p>
             </div>
@@ -159,7 +159,7 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
           <button
             onClick={onClose}
             disabled={isGenerating}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50"
+            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50"
             aria-label="Close modal"
           >
             <X className="h-5 w-5" />
@@ -170,15 +170,14 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
         <form onSubmit={handleGenerate} className="p-6 space-y-5">
           {/* 1. Event Type Selector */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
               1. What kind of event are you organizing?
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               {[
                 { id: 'wedding', label: '💍 Wedding', desc: 'Ceremony & reception' },
-                { id: 'birthday', label: '🎂 Birthday', desc: 'Milestone & party' },
-                { id: 'community', label: '🤝 Community', desc: 'Festival & gala' },
-                { id: 'custom', label: '✨ Custom', desc: 'Party or corporate' },
+                { id: 'birthday', label: '🎂 Birthday', desc: 'Milestone & celebration' },
+                { id: 'community', label: '🤝 Community', desc: 'Festival & gathering' },
               ].map((opt) => (
                 <button
                   key={opt.id}
@@ -191,7 +190,7 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
                   }`}
                 >
                   <div className="font-semibold text-sm">{opt.label}</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">{opt.desc}</div>
+                  <div className="text-[11px] text-slate-300 mt-0.5">{opt.desc}</div>
                 </button>
               ))}
             </div>
@@ -205,6 +204,7 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
             <input
               type="text"
               required
+              maxLength={120}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Maya & Leo's Rooftop Wedding"
@@ -233,6 +233,7 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
               <input
                 type="text"
                 required
+                maxLength={200}
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="City or venue name"
@@ -245,8 +246,8 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
               </label>
               <input
                 type="number"
-                min="5"
-                max="5000"
+                min="1"
+                max="10000"
                 required
                 value={guestCount}
                 onChange={(e) => setGuestCount(Number(e.target.value))}
@@ -264,14 +265,15 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
               <div className="relative">
                 <input
                   type="number"
-                  min="500"
+                  min="1"
+                  max="1000000000"
                   step="500"
                   required
                   value={totalBudget}
                   onChange={(e) => setTotalBudget(Number(e.target.value))}
                   className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 pl-9 text-sm text-white focus:outline-none focus:ring-2 focus:ring-rose-500"
                 />
-                <span className="absolute left-3 top-2.5 text-slate-400 font-semibold text-sm">
+                <span className="absolute left-3 top-2.5 text-slate-300 font-semibold text-sm">
                   {CURRENCY_SYMBOLS[currency] || '$'}
                 </span>
               </div>
@@ -302,6 +304,7 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
             <input
               type="text"
               required
+              maxLength={200}
               value={vibe}
               onChange={(e) => setVibe(e.target.value)}
               placeholder="e.g. Romantic candlelit botanical, retro arcade synthwave..."
@@ -309,7 +312,7 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
             />
             {/* Quick chips */}
             <div className="flex flex-wrap gap-1.5 mt-2">
-              <span className="text-[11px] text-slate-400 py-0.5">Quick picks:</span>
+              <span className="text-[11px] text-slate-300 py-0.5">Quick picks:</span>
               {(VIBE_SUGGESTIONS[type] || []).map((sug, i) => (
                 <button
                   key={i}
@@ -330,6 +333,7 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
             </label>
             <textarea
               rows={2}
+              maxLength={500}
               value={preferences}
               onChange={(e) => setPreferences(e.target.value)}
               placeholder="e.g. Outdoor garden setting, vegan appetizers, live saxophonist, audio guestbook, dog-friendly..."
@@ -359,7 +363,7 @@ export const AIPlannerModal: React.FC<AIPlannerModalProps> = ({
               type="button"
               onClick={onClose}
               disabled={isGenerating}
-              className="px-4 py-2 text-sm text-slate-400 hover:text-white transition-colors"
+              className="px-4 py-2 text-sm text-slate-300 hover:text-white transition-colors"
             >
               Cancel
             </button>

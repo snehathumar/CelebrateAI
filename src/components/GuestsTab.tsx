@@ -71,7 +71,7 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
               <Users className="h-5 w-5 text-blue-400" />
               Guest List & RSVP Manager
             </h2>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-300 mt-1">
               Track invitations, plus-ones, meal requirements, and table seating arrangements.
             </p>
           </div>
@@ -88,9 +88,9 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
         {/* 4 RSVP KPI Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
           <div className="bg-slate-800/60 p-3.5 rounded-xl border border-slate-700/60">
-            <div className="text-[11px] text-slate-400 font-medium">Total In List</div>
+            <div className="text-[11px] text-slate-300 font-medium">Total In List</div>
             <div className="text-xl font-bold text-white mt-1">{stats.total}</div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Invited contacts</div>
+            <div className="text-[10px] text-slate-300 mt-0.5">Invited contacts</div>
           </div>
 
           <div className="bg-emerald-500/10 p-3.5 rounded-xl border border-emerald-500/30">
@@ -126,7 +126,7 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
         {/* Dietary breakdown pill tags */}
         {Object.keys(stats.dietaryCounts).length > 0 && (
           <div className="mt-5 pt-4 border-t border-slate-800 flex flex-wrap items-center gap-2">
-            <span className="text-xs text-slate-400 flex items-center gap-1 font-medium">
+            <span className="text-xs text-slate-300 flex items-center gap-1 font-medium">
               <Utensils className="h-3 w-3 text-amber-400" /> Dietary Accommodations:
             </span>
             {Object.entries(stats.dietaryCounts).map(([diet, count]) => (
@@ -145,7 +145,7 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
         <div className="p-4 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2 flex-1 max-w-sm">
-            <Search className="h-4 w-4 text-slate-400" />
+            <Search className="h-4 w-4 text-slate-300" />
             <input
               type="text"
               value={searchTerm}
@@ -156,7 +156,7 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
           </div>
 
           <div className="flex items-center gap-2 text-xs">
-            <Filter className="h-3.5 w-3.5 text-slate-400" />
+            <Filter className="h-3.5 w-3.5 text-slate-300" />
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
@@ -173,7 +173,7 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
         {/* List */}
         <div className="divide-y divide-slate-800">
           {filteredGuests.length === 0 ? (
-            <div className="p-8 text-center text-slate-400 text-sm">
+            <div className="p-8 text-center text-slate-300 text-sm">
               No guests found matching filters.
             </div>
           ) : (
@@ -202,7 +202,7 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
                       )}
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-slate-400">
+                    <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-slate-300">
                       {guest.table && (
                         <span className="text-slate-300 bg-slate-800/80 px-2 py-0.5 rounded">
                           🪑 {guest.table}
@@ -219,7 +219,7 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
                   <div className="flex items-center justify-between sm:justify-end gap-3">
                     <select
                       value={guest.rsvpStatus}
-                      onChange={(e) => handleUpdateRsvp(guest.id, e.target.value as any)}
+                      onChange={(e) => handleUpdateRsvp(guest.id, e.target.value as GuestItem['rsvpStatus'])}
                       className={`text-xs font-semibold rounded-lg px-2.5 py-1 border focus:outline-none ${statusBadges}`}
                     >
                       <option value="attending">✓ Attending</option>
@@ -270,7 +270,7 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
                   </label>
                   <select
                     value={newGroup}
-                    onChange={(e) => setNewGroup(e.target.value as any)}
+                    onChange={(e) => setNewGroup(e.target.value as GuestItem['group'])}
                     className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-rose-500"
                   >
                     <option value="Family">Family</option>
@@ -287,7 +287,7 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
                   </label>
                   <select
                     value={newRsvp}
-                    onChange={(e) => setNewRsvp(e.target.value as any)}
+                    onChange={(e) => setNewRsvp(e.target.value as GuestItem['rsvpStatus'])}
                     className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-rose-500"
                   >
                     <option value="attending">Attending</option>
@@ -340,7 +340,7 @@ export const GuestsTab: React.FC<GuestsTabProps> = ({ plan, onUpdateGuests }) =>
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-3.5 py-1.5 text-xs text-slate-400 hover:text-white"
+                  className="px-3.5 py-1.5 text-xs text-slate-300 hover:text-white"
                 >
                   Cancel
                 </button>

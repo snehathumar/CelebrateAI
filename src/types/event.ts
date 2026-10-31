@@ -97,4 +97,5 @@ export interface AIChatMessage {
   text: string;
   timestamp: string;
   suggestions?: string[];
+  source?: 'gemini' | 'template';
 }

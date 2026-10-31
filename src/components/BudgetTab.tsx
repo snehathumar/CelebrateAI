@@ -113,7 +113,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
               <DollarSign className="h-5 w-5 text-amber-400" />
               Event Budget & Cost Controller
             </h2>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-300 mt-1">
               Track estimates against actual invoices, manage cash flow, and avoid budget surprises.
             </p>
           </div>
@@ -139,7 +139,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
         {/* Financial KPI Dashboard */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
           <div className="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60">
-            <div className="text-xs text-slate-400 font-medium">Budget Ceiling</div>
+            <div className="text-xs text-slate-300 font-medium">Budget Ceiling</div>
             {isEditingBudgetLimit ? (
               <div className="flex items-center gap-1 mt-1">
                 <input
@@ -168,26 +168,26 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
                 title="Click to edit budget limit"
               >
                 {formatCurrency(plan.totalBudget, plan.currency)}
-                <span className="text-[10px] text-slate-400 ml-1.5 font-normal">✎ Edit</span>
+                <span className="text-[10px] text-slate-300 ml-1.5 font-normal">✎ Edit</span>
               </div>
             )}
-            <div className="text-[11px] text-slate-400 mt-1">Total planned ceiling</div>
+            <div className="text-[11px] text-slate-300 mt-1">Total planned ceiling</div>
           </div>
 
           <div className="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60">
-            <div className="text-xs text-slate-400 font-medium">Total Estimated</div>
+            <div className="text-xs text-slate-300 font-medium">Total Estimated</div>
             <div className="text-2xl font-bold text-amber-300 mt-1">
               {formatCurrency(summary.totalEstimated, plan.currency)}
             </div>
-            <div className="text-[11px] text-slate-400 mt-1">Sum of expected quotes</div>
+            <div className="text-[11px] text-slate-300 mt-1">Sum of expected quotes</div>
           </div>
 
           <div className="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60">
-            <div className="text-xs text-slate-400 font-medium">Actual Invoiced</div>
+            <div className="text-xs text-slate-300 font-medium">Actual Invoiced</div>
             <div className="text-2xl font-bold text-indigo-300 mt-1">
               {formatCurrency(summary.totalActual, plan.currency)}
             </div>
-            <div className="text-[11px] text-slate-400 mt-1">
+            <div className="text-[11px] text-slate-300 mt-1">
               Paid: {formatCurrency(summary.totalPaid, plan.currency)}
             </div>
           </div>
@@ -211,7 +211,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
 
         {/* Category breakdown bar cards */}
         <div className="mt-6 pt-5 border-t border-slate-800">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-300 mb-3">
             Category Allocations
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -229,13 +229,13 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
                 >
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-semibold text-white">{cat}</span>
-                    <span className="text-slate-400">{catPercent}%</span>
+                    <span className="text-slate-300">{catPercent}%</span>
                   </div>
                   <div className="flex items-baseline justify-between mt-1 text-sm">
                     <span className="font-bold text-amber-200">
                       {formatCurrency(val.estimated, plan.currency)}
                     </span>
-                    <span className="text-[11px] text-slate-400">{val.count} items</span>
+                    <span className="text-[11px] text-slate-300">{val.count} items</span>
                   </div>
                   <div className="h-1.5 w-full bg-slate-700 rounded-full mt-2 overflow-hidden">
                     <div
@@ -255,7 +255,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
         {/* Table Filter Header */}
         <div className="p-4 sm:p-5 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-slate-400" />
+            <Filter className="h-4 w-4 text-slate-300" />
             <span className="text-xs font-semibold text-slate-300">Filter Category:</span>
             <select
               value={selectedCategory}
@@ -271,7 +271,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
             </select>
           </div>
 
-          <div className="text-xs text-slate-400">
+          <div className="text-xs text-slate-300">
             Showing <span className="font-bold text-white">{filteredItems.length}</span> line items
           </div>
         </div>
@@ -279,7 +279,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
         {/* Line Items List */}
         <div className="divide-y divide-slate-800">
           {filteredItems.length === 0 ? (
-            <div className="p-8 text-center text-slate-400 text-sm">
+            <div className="p-8 text-center text-slate-300 text-sm">
               No items in this category yet. Click "Add Expense" to create one.
             </div>
           ) : (
@@ -310,7 +310,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
                         </span>
                       )}
                     </div>
-                    {item.notes && <p className="text-xs text-slate-400 mt-0.5">{item.notes}</p>}
+                    {item.notes && <p className="text-xs text-slate-300 mt-0.5">{item.notes}</p>}
                   </div>
                 </div>
 
@@ -318,7 +318,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
                 <div className="flex items-center justify-between sm:justify-end gap-4">
                   <div className="flex items-center gap-3 text-xs">
                     <div>
-                      <div className="text-slate-400 text-[10px]">Estimated</div>
+                      <div className="text-slate-300 text-[10px]">Estimated</div>
                       <input
                         type="number"
                         value={item.estimatedCost}
@@ -329,7 +329,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
                       />
                     </div>
                     <div>
-                      <div className="text-slate-400 text-[10px]">Actual</div>
+                      <div className="text-slate-300 text-[10px]">Actual</div>
                       <input
                         type="number"
                         value={item.actualCost}
@@ -383,7 +383,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
                 </label>
                 <select
                   value={newItemCategory}
-                  onChange={(e) => setNewItemCategory(e.target.value as any)}
+                  onChange={(e) => setNewItemCategory(e.target.value as BudgetItem['category'])}
                   className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-rose-500"
                 >
                   {categories.map((c) => (
@@ -425,7 +425,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-3.5 py-1.5 text-xs text-slate-400 hover:text-white"
+                  className="px-3.5 py-1.5 text-xs text-slate-300 hover:text-white"
                 >
                   Cancel
                 </button>

@@ -18,6 +18,7 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
     inquiryEmail?: string;
     negotiationPitch?: string;
     questionsToCheck?: string[];
+    source?: 'gemini' | 'template';
   } | null>(null);
   const [isLoadingNegotiation, setIsLoadingNegotiation] = useState(false);
   const [copiedType, setCopiedType] = useState<string | null>(null);
@@ -51,7 +52,6 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
   };
 
   const handleToggleChecklistItem = (vendorId: string, itemIdx: number) => {
-    // We can store checked state or simple text. Let's toggle mark
     const updated = plan.vendors.map((v) => {
       if (v.id !== vendorId) return v;
       const checklist = [...v.checklist];
@@ -117,6 +117,7 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
           targetBudget: Math.round((vendor.quoteAmount || 2500) * 0.85),
           eventTitle: plan.title,
           eventType: plan.type,
+          eventDate: plan.date,
           currency: plan.currency,
           requirements: vendor.notes || 'Full package service for our celebration',
         }),
@@ -149,7 +150,7 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
               <Briefcase className="h-5 w-5 text-indigo-400" />
               Vendor Checklist & Contract Pipeline
             </h2>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-300 mt-1">
               Manage inquiries, quote negotiations, vetting checklists, and confirmed bookings.
             </p>
           </div>
@@ -189,7 +190,7 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
       {/* Vendor Cards Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {filteredVendors.length === 0 ? (
-          <div className="lg:col-span-2 p-10 bg-slate-900 border border-slate-800 rounded-2xl text-center text-slate-400 text-sm">
+          <div className="lg:col-span-2 p-10 bg-slate-900 border border-slate-800 rounded-2xl text-center text-slate-300 text-sm">
             No vendors match this filter. Click "Add Vendor" to add a new supplier.
           </div>
         ) : (
@@ -217,7 +218,7 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
                         <h3 className="text-base font-bold text-white">{vendor.name}</h3>
                       </div>
                       {vendor.contactPerson && (
-                        <p className="text-xs text-slate-400 mt-1">
+                        <p className="text-xs text-slate-300 mt-1">
                           Contact: <span className="text-slate-300">{vendor.contactPerson}</span>
                         </p>
                       )}
@@ -242,33 +243,33 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
                   {/* Financial & Contact metrics */}
                   <div className="mt-3.5 grid grid-cols-2 gap-2 text-xs bg-slate-800/40 p-2.5 rounded-xl border border-slate-800">
                     <div>
-                      <div className="text-slate-400 text-[10px]">Quote Amount</div>
+                      <div className="text-slate-300 text-[10px]">Quote Amount</div>
                       <div className="font-bold text-amber-200 text-sm">
                         {formatCurrency(vendor.quoteAmount, plan.currency)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-slate-400 text-[10px]">Deposit Paid</div>
+                      <div className="text-slate-300 text-[10px]">Deposit Paid</div>
                       <div className="font-bold text-emerald-300 text-sm">
                         {formatCurrency(vendor.depositPaid, plan.currency)}
                       </div>
                     </div>
                     {vendor.email && (
                       <div className="col-span-2 flex items-center gap-1.5 text-slate-300 truncate pt-1">
-                        <Mail className="h-3 w-3 text-slate-400" />
+                        <Mail className="h-3 w-3 text-slate-300" />
                         <span className="truncate">{vendor.email}</span>
                       </div>
                     )}
                     {vendor.phone && (
                       <div className="col-span-2 flex items-center gap-1.5 text-slate-300 truncate">
-                        <Phone className="h-3 w-3 text-slate-400" />
+                        <Phone className="h-3 w-3 text-slate-300" />
                         <span>{vendor.phone}</span>
                       </div>
                     )}
                   </div>
 
                   {vendor.notes && (
-                    <p className="text-xs text-slate-400 mt-3 italic bg-slate-800/20 p-2 rounded-lg border border-slate-800/60">
+                    <p className="text-xs text-slate-300 mt-3 italic bg-slate-800/20 p-2 rounded-lg border border-slate-800/60">
                       "{vendor.notes}"
                     </p>
                   )}
@@ -277,7 +278,7 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
                   <div className="mt-4">
                     <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
                       <span>Vetting Checklist</span>
-                      <span className="text-[10px] text-slate-400 font-normal">
+                      <span className="text-[10px] text-slate-300 font-normal">
                         {vendor.checklist.filter((i) => i.startsWith('[✓] ')).length} / {vendor.checklist.length} done
                       </span>
                     </div>
@@ -291,7 +292,7 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
                             onClick={() => handleToggleChecklistItem(vendor.id, idx)}
                             className="flex items-start gap-2 text-xs text-slate-300 cursor-pointer group hover:text-white"
                           >
-                            <span className="mt-0.5 text-slate-400 group-hover:text-indigo-400">
+                            <span className="mt-0.5 text-slate-300 group-hover:text-indigo-400">
                               {isDone ? (
                                 <CheckSquare className="h-3.5 w-3.5 text-emerald-400" />
                               ) : (
@@ -346,14 +347,14 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
                   <h3 className="font-bold text-base text-white">
                     AI Vendor Strategy: {negotiatingVendor.name}
                   </h3>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-slate-300">
                     Category: {negotiatingVendor.category} • Quoted: {formatCurrency(negotiatingVendor.quoteAmount, plan.currency)}
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setNegotiatingVendor(null)}
-                className="text-slate-400 hover:text-white p-1"
+                className="text-slate-300 hover:text-white p-1"
                 aria-label="Close negotiator"
               >
                 <X className="h-5 w-5" />
@@ -369,6 +370,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
               </div>
             ) : negotiationData ? (
               <div className="space-y-6 pt-4 text-xs">
+                {negotiationData.source === 'template' && (
+                  <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs">
+                    Template result (AI unavailable)
+                  </div>
+                )}
                 {/* 1. Initial Inquiry Draft */}
                 <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/60">
                   <div className="flex items-center justify-between mb-2">
@@ -423,7 +429,7 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
                 </div>
               </div>
             ) : (
-              <div className="py-8 text-center text-slate-400">
+              <div className="py-8 text-center text-slate-300">
                 Failed to generate strategy. Please try again.
               </div>
             )}
@@ -553,7 +559,7 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ plan, onUpdateVendors })
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-3.5 py-1.5 text-xs text-slate-400 hover:text-white"
+                  className="px-3.5 py-1.5 text-xs text-slate-300 hover:text-white"
                 >
                   Cancel
                 </button>

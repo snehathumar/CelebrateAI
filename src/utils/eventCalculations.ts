@@ -143,6 +143,50 @@ export function getPhaseLabel(phase: TimelinePhase): string {
   }
 }
 
+export function normalizeBudgetItems(items: BudgetItem[], targetTotal: number): BudgetItem[] {
+  if (items.length === 0 || targetTotal <= 0) return items;
+  const currentTotal = items.reduce((sum, item) => sum + (item.estimatedCost || 0), 0);
+  if (currentTotal === 0) {
+    const split = Math.floor(targetTotal / items.length);
+    const remainder = targetTotal - split * items.length;
+    return items.map((item, idx) => ({
+      ...item,
+      estimatedCost: split + (idx === items.length - 1 ? remainder : 0),
+    }));
+  }
+
+  let runningSum = 0;
+  return items.map((item, idx) => {
+    if (idx === items.length - 1) {
+      const lastCost = Math.max(0, targetTotal - runningSum);
+      return { ...item, estimatedCost: lastCost };
+    }
+    const proportional = Math.round((item.estimatedCost / currentTotal) * targetTotal);
+    runningSum += proportional;
+    return { ...item, estimatedCost: proportional };
+  });
+}
+
+export function getValidPhases(eventDateStr: string, fromDate: Date = new Date()): TimelinePhase[] {
+  const eventDate = new Date(eventDateStr + 'T00:00:00');
+  const diffDays = Math.ceil((eventDate.getTime() - fromDate.getTime()) / (1000 * 60 * 60 * 24));
+
+  const valid: TimelinePhase[] = ['day_of'];
+  if (diffDays >= 7) {
+    valid.unshift('final_weeks');
+  }
+  if (diffDays >= 30) {
+    valid.unshift('3-1_months');
+  }
+  if (diffDays >= 90) {
+    valid.unshift('6-3_months');
+  }
+  if (diffDays >= 180) {
+    valid.unshift('12-6_months');
+  }
+  return valid;
+}
+
 export function getSampleWeddingPlan(): EventPlan {
   return {
     id: 'sample-wedding-1',

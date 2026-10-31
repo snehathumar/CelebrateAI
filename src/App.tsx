@@ -33,6 +33,7 @@ export default function App() {
   const [isConciergeOpen, setIsConciergeOpen] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [planSource, setPlanSource] = useState<'gemini' | 'template' | undefined>(undefined);
 
   // Sync to local storage
   useEffect(() => {
@@ -45,6 +46,7 @@ export default function App() {
   };
 
   const handleSelectSample = (type: 'wedding' | 'birthday' | 'community') => {
+    setPlanSource(undefined);
     if (type === 'wedding') {
       setCurrentPlan(getSampleWeddingPlan());
       showToast('Loaded Wedding Celebration plan!');
@@ -57,9 +59,14 @@ export default function App() {
     }
   };
 
-  const handlePlanGenerated = (newPlan: EventPlan) => {
+  const handlePlanGenerated = (newPlan: EventPlan, source?: 'gemini' | 'template') => {
     setCurrentPlan(newPlan);
-    showToast(`🎉 New AI Plan Created: "${newPlan.title}"!`);
+    setPlanSource(source);
+    if (source === 'template') {
+      showToast(`Generated: "${newPlan.title}" (Template Fallback)`);
+    } else {
+      showToast(`🎉 New AI Plan Created: "${newPlan.title}"!`);
+    }
   };
 
   const handleCurrencyChange = (currency: CurrencyCode) => {
@@ -154,6 +161,7 @@ export default function App() {
       {/* Hero Banner with metrics & palette */}
       <EventHero
         plan={currentPlan}
+        planSource={planSource}
         onOpenAIConcierge={() => setIsConciergeOpen(true)}
       />
 
